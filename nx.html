@@ -1,0 +1,212 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1>None</h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 800;
+            height: 800;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+        #loadingBar {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width: 800;
+            height: 800;
+            background-color:rgba(200,200,200,0.8);
+            -webkit-transition: all 0.5s ease;
+            -moz-transition: all 0.5s ease;
+            -ms-transition: all 0.5s ease;
+            -o-transition: all 0.5s ease;
+            transition: all 0.5s ease;
+            opacity:1;
+        }
+
+        #bar {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width:20px;
+            height:20px;
+            margin:auto auto auto auto;
+            border-radius:11px;
+            border:2px solid rgba(30,30,30,0.05);
+            background: rgb(0, 173, 246); /* Old browsers */
+            box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+        }
+
+        #border {
+            position:absolute;
+            top:10px;
+            left:10px;
+            width:500px;
+            height:23px;
+            margin:auto auto auto auto;
+            box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+            border-radius:10px;
+        }
+
+        #text {
+            position:absolute;
+            top:8px;
+            left:530px;
+            width:30px;
+            height:50px;
+            margin:auto auto auto auto;
+            font-size:22px;
+            color: #000000;
+        }
+
+        div.outerBorder {
+            position:relative;
+            top:400px;
+            width:600px;
+            height:44px;
+            margin:auto auto auto auto;
+            border:8px solid rgba(0,0,0,0.1);
+            background: rgb(252,252,252); /* Old browsers */
+            background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+            border-radius:72px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+<div id="loadingBar">
+    <div class="outerBorder">
+        <div id="text">0%</div>
+        <div id="border">
+            <div id="bar"></div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"id": "ADHD", "label": "ADHD", "shape": "dot", "size": 10}, {"id": "Guanfacine", "label": "Guanfacine", "shape": "dot", "size": 10}, {"id": "Daytrana", "label": "Daytrana", "shape": "dot", "size": 10}, {"id": "Intuniv", "label": "Intuniv", "shape": "dot", "size": 10}, {"id": "Focalin", "label": "Focalin", "shape": "dot", "size": 10}, {"id": "Vyvanse", "label": "Vyvanse", "shape": "dot", "size": 10}, {"id": "Lisdexamfetamine", "label": "Lisdexamfetamine", "shape": "dot", "size": 10}, {"id": "Amphetamine / dextroamphetamine", "label": "Amphetamine / dextroamphetamine", "shape": "dot", "size": 10}, {"id": "Atomoxetine", "label": "Atomoxetine", "shape": "dot", "size": 10}, {"id": "Concerta", "label": "Concerta", "shape": "dot", "size": 10}, {"id": "Strattera", "label": "Strattera", "shape": "dot", "size": 10}, {"id": "Focalin XR", "label": "Focalin XR", "shape": "dot", "size": 10}, {"id": "Methylphenidate", "label": "Methylphenidate", "shape": "dot", "size": 10}, {"id": "Ritalin", "label": "Ritalin", "shape": "dot", "size": 10}, {"id": "Kapvay", "label": "Kapvay", "shape": "dot", "size": 10}, {"id": "Adderall", "label": "Adderall", "shape": "dot", "size": 10}, {"id": "Bupropion", "label": "Bupropion", "shape": "dot", "size": 10}, {"id": "Dexmethylphenidate", "label": "Dexmethylphenidate", "shape": "dot", "size": 10}, {"id": "Wellbutrin SR", "label": "Wellbutrin SR", "shape": "dot", "size": 10}, {"id": "Zenzedi", "label": "Zenzedi", "shape": "dot", "size": 10}, {"id": "Desoxyn", "label": "Desoxyn", "shape": "dot", "size": 10}, {"id": "Birth Control", "label": "Birth Control", "shape": "dot", "size": 10}, {"id": "Lybrel", "label": "Lybrel", "shape": "dot", "size": 10}, {"id": "Ortho Evra", "label": "Ortho Evra", "shape": "dot", "size": 10}, {"id": "Ethinyl estradiol / levonorgestrel", "label": "Ethinyl estradiol / levonorgestrel", "shape": "dot", "size": 10}, {"id": "Nexplanon", "label": "Nexplanon", "shape": "dot", "size": 10}, {"id": "Etonogestrel", "label": "Etonogestrel", "shape": "dot", "size": 10}, {"id": "Implanon", "label": "Implanon", "shape": "dot", "size": 10}, {"id": "Drospirenone / ethinyl estradiol", "label": "Drospirenone / ethinyl estradiol", "shape": "dot", "size": 10}, {"id": "NuvaRing", "label": "NuvaRing", "shape": "dot", "size": 10}, {"id": "Gildess Fe 1 / 20", "label": "Gildess Fe 1 / 20", "shape": "dot", "size": 10}, {"id": "Lo Loestrin Fe", "label": "Lo Loestrin Fe", "shape": "dot", "size": 10}, {"id": "Levonorgestrel", "label": "Levonorgestrel", "shape": "dot", "size": 10}, {"id": "Sronyx", "label": "Sronyx", "shape": "dot", "size": 10}, {"id": "Jolivette", "label": "Jolivette", "shape": "dot", "size": 10}, {"id": "Aviane", "label": "Aviane", "shape": "dot", "size": 10}, {"id": "Depo-Provera", "label": "Depo-Provera", "shape": "dot", "size": 10}, {"id": "Ethinyl estradiol / norgestimate", "label": "Ethinyl estradiol / norgestimate", "shape": "dot", "size": 10}, {"id": "Mirena", "label": "Mirena", "shape": "dot", "size": 10}, {"id": "Ethinyl estradiol / norelgestromin", "label": "Ethinyl estradiol / norelgestromin", "shape": "dot", "size": 10}, {"id": "Reclipsen", "label": "Reclipsen", "shape": "dot", "size": 10}, {"id": "Skyla", "label": "Skyla", "shape": "dot", "size": 10}, {"id": "Ortho Tri-Cyclen", "label": "Ortho Tri-Cyclen", "shape": "dot", "size": 10}, {"id": "Ethinyl estradiol / norethindrone", "label": "Ethinyl estradiol / norethindrone", "shape": "dot", "size": 10}, {"id": "Seasonique", "label": "Seasonique", "shape": "dot", "size": 10}, {"id": "Liletta", "label": "Liletta", "shape": "dot", "size": 10}, {"id": "Medroxyprogesterone", "label": "Medroxyprogesterone", "shape": "dot", "size": 10}, {"id": "Levora", "label": "Levora", "shape": "dot", "size": 10}, {"id": "ParaGard", "label": "ParaGard", "shape": "dot", "size": 10}, {"id": "Ocella", "label": "Ocella", "shape": "dot", "size": 10}, {"id": "Copper", "label": "Copper", "shape": "dot", "size": 10}, {"id": "Microgestin Fe 1 / 20", "label": "Microgestin Fe 1 / 20", "shape": "dot", "size": 10}, {"id": "Blisovi Fe 1 / 20", "label": "Blisovi Fe 1 / 20", "shape": "dot", "size": 10}, {"id": "Loestrin 24 Fe", "label": "Loestrin 24 Fe", "shape": "dot", "size": 10}, {"id": "Junel Fe 1 / 20", "label": "Junel Fe 1 / 20", "shape": "dot", "size": 10}, {"id": "Sprintec", "label": "Sprintec", "shape": "dot", "size": 10}, {"id": "Ortho Tri-Cyclen Lo", "label": "Ortho Tri-Cyclen Lo", "shape": "dot", "size": 10}, {"id": "Orsythia", "label": "Orsythia", "shape": "dot", "size": 10}, {"id": "Ethinyl estradiol / etonogestrel", "label": "Ethinyl estradiol / etonogestrel", "shape": "dot", "size": 10}, {"id": "Depo-Provera Contraceptive", "label": "Depo-Provera Contraceptive", "shape": "dot", "size": 10}, {"id": "TriNessa", "label": "TriNessa", "shape": "dot", "size": 10}, {"id": "Yaz", "label": "Yaz", "shape": "dot", "size": 10}, {"id": "Norethindrone", "label": "Norethindrone", "shape": "dot", "size": 10}, {"id": "Minastrin 24 Fe", "label": "Minastrin 24 Fe", "shape": "dot", "size": 10}, {"id": "Mononessa", "label": "Mononessa", "shape": "dot", "size": 10}, {"id": "Jolessa", "label": "Jolessa", "shape": "dot", "size": 10}, {"id": "Cryselle", "label": "Cryselle", "shape": "dot", "size": 10}, {"id": "Sharobel", "label": "Sharobel", "shape": "dot", "size": 10}, {"id": "Apri", "label": "Apri", "shape": "dot", "size": 10}, {"id": "Velivet", "label": "Velivet", "shape": "dot", "size": 10}, {"id": "Necon 1 / 35", "label": "Necon 1 / 35", "shape": "dot", "size": 10}, {"id": "Nora-Be", "label": "Nora-Be", "shape": "dot", "size": 10}, {"id": "Kyleena", "label": "Kyleena", "shape": "dot", "size": 10}, {"id": "Camrese", "label": "Camrese", "shape": "dot", "size": 10}, {"id": "Junel Fe 1.5 / 30", "label": "Junel Fe 1.5 / 30", "shape": "dot", "size": 10}, {"id": "Desogestrel / ethinyl estradiol", "label": "Desogestrel / ethinyl estradiol", "shape": "dot", "size": 10}, {"id": "Beyaz", "label": "Beyaz", "shape": "dot", "size": 10}, {"id": "Errin", "label": "Errin", "shape": "dot", "size": 10}, {"id": "Estarylla", "label": "Estarylla", "shape": "dot", "size": 10}, {"id": "Ethinyl estradiol / norgestrel", "label": "Ethinyl estradiol / norgestrel", "shape": "dot", "size": 10}, {"id": "Lutera", "label": "Lutera", "shape": "dot", "size": 10}, {"id": "LoSeasonique", "label": "LoSeasonique", "shape": "dot", "size": 10}, {"id": "Ortho Cyclen", "label": "Ortho Cyclen", "shape": "dot", "size": 10}, {"id": "Xulane", "label": "Xulane", "shape": "dot", "size": 10}, {"id": "Alesse", "label": "Alesse", "shape": "dot", "size": 10}, {"id": "Tri-Lo-Sprintec", "label": "Tri-Lo-Sprintec", "shape": "dot", "size": 10}, {"id": "Emergency Contraception", "label": "Emergency Contraception", "shape": "dot", "size": 10}, {"id": "Plan B One-Step", "label": "Plan B One-Step", "shape": "dot", "size": 10}, {"id": "Ulipristal", "label": "Ulipristal", "shape": "dot", "size": 10}, {"id": "Plan B", "label": "Plan B", "shape": "dot", "size": 10}, {"id": "EContra EZ", "label": "EContra EZ", "shape": "dot", "size": 10}, {"id": "ella", "label": "ella", "shape": "dot", "size": 10}, {"id": "My Way", "label": "My Way", "shape": "dot", "size": 10}, {"id": "Bipolar Disorde", "label": "Bipolar Disorde", "shape": "dot", "size": 10}, {"id": "Aripiprazole", "label": "Aripiprazole", "shape": "dot", "size": 10}, {"id": "Lamotrigine", "label": "Lamotrigine", "shape": "dot", "size": 10}, {"id": "Symbyax", "label": "Symbyax", "shape": "dot", "size": 10}, {"id": "Latuda", "label": "Latuda", "shape": "dot", "size": 10}, {"id": "Lithium", "label": "Lithium", "shape": "dot", "size": 10}, {"id": "Lamictal", "label": "Lamictal", "shape": "dot", "size": 10}, {"id": "Olanzapine", "label": "Olanzapine", "shape": "dot", "size": 10}, {"id": "Lurasidone", "label": "Lurasidone", "shape": "dot", "size": 10}, {"id": "Depakote", "label": "Depakote", "shape": "dot", "size": 10}, {"id": "Ziprasidone", "label": "Ziprasidone", "shape": "dot", "size": 10}, {"id": "Saphris", "label": "Saphris", "shape": "dot", "size": 10}, {"id": "Quetiapine", "label": "Quetiapine", "shape": "dot", "size": 10}, {"id": "Seroquel", "label": "Seroquel", "shape": "dot", "size": 10}, {"id": "Sertraline", "label": "Sertraline", "shape": "dot", "size": 10}, {"id": "Klonopin", "label": "Klonopin", "shape": "dot", "size": 10}, {"id": "Carbamazepine", "label": "Carbamazepine", "shape": "dot", "size": 10}, {"id": "Zyprexa", "label": "Zyprexa", "shape": "dot", "size": 10}, {"id": "Seroquel XR", "label": "Seroquel XR", "shape": "dot", "size": 10}, {"id": "Wellbutrin", "label": "Wellbutrin", "shape": "dot", "size": 10}, {"id": "Divalproex sodium", "label": "Divalproex sodium", "shape": "dot", "size": 10}, {"id": "Effexor", "label": "Effexor", "shape": "dot", "size": 10}, {"id": "Geodon", "label": "Geodon", "shape": "dot", "size": 10}, {"id": "Invega", "label": "Invega", "shape": "dot", "size": 10}, {"id": "Depression", "label": "Depression", "shape": "dot", "size": 10}, {"id": "L-methylfolate", "label": "L-methylfolate", "shape": "dot", "size": 10}, {"id": "Venlafaxine", "label": "Venlafaxine", "shape": "dot", "size": 10}, {"id": "Effexor XR", "label": "Effexor XR", "shape": "dot", "size": 10}, {"id": "Desvenlafaxine", "label": "Desvenlafaxine", "shape": "dot", "size": 10}, {"id": "Fluoxetine", "label": "Fluoxetine", "shape": "dot", "size": 10}, {"id": "Trintellix", "label": "Trintellix", "shape": "dot", "size": 10}, {"id": "Trazodone", "label": "Trazodone", "shape": "dot", "size": 10}, {"id": "Pristiq", "label": "Pristiq", "shape": "dot", "size": 10}, {"id": "Levomilnacipran", "label": "Levomilnacipran", "shape": "dot", "size": 10}, {"id": "Cymbalta", "label": "Cymbalta", "shape": "dot", "size": 10}, {"id": "Escitalopram", "label": "Escitalopram", "shape": "dot", "size": 10}, {"id": "Nardil", "label": "Nardil", "shape": "dot", "size": 10}, {"id": "Zoloft", "label": "Zoloft", "shape": "dot", "size": 10}, {"id": "Wellbutrin XL", "label": "Wellbutrin XL", "shape": "dot", "size": 10}, {"id": "Lexapro", "label": "Lexapro", "shape": "dot", "size": 10}, {"id": "Viibryd", "label": "Viibryd", "shape": "dot", "size": 10}, {"id": "Duloxetine", "label": "Duloxetine", "shape": "dot", "size": 10}, {"id": "Rexulti", "label": "Rexulti", "shape": "dot", "size": 10}, {"id": "Citalopram", "label": "Citalopram", "shape": "dot", "size": 10}, {"id": "St. john\u0027s wort", "label": "St. john\u0027s wort", "shape": "dot", "size": 10}, {"id": "Vilazodone", "label": "Vilazodone", "shape": "dot", "size": 10}, {"id": "Emsam", "label": "Emsam", "shape": "dot", "size": 10}, {"id": "Celexa", "label": "Celexa", "shape": "dot", "size": 10}, {"id": "Vortioxetine", "label": "Vortioxetine", "shape": "dot", "size": 10}, {"id": "Paxil", "label": "Paxil", "shape": "dot", "size": 10}, {"id": "Prozac", "label": "Prozac", "shape": "dot", "size": 10}, {"id": "Isocarboxazid", "label": "Isocarboxazid", "shape": "dot", "size": 10}, {"id": "Limbitrol", "label": "Limbitrol", "shape": "dot", "size": 10}, {"id": "Paroxetine", "label": "Paroxetine", "shape": "dot", "size": 10}, {"id": "Deplin", "label": "Deplin", "shape": "dot", "size": 10}, {"id": "Serzone", "label": "Serzone", "shape": "dot", "size": 10}, {"id": "Xanax", "label": "Xanax", "shape": "dot", "size": 10}, {"id": "Obesity", "label": "Obesity", "shape": "dot", "size": 10}, {"id": "Liraglutide", "label": "Liraglutide", "shape": "dot", "size": 10}, {"id": "Contrave", "label": "Contrave", "shape": "dot", "size": 10}, {"id": "Phentermine / topiramate", "label": "Phentermine / topiramate", "shape": "dot", "size": 10}, {"id": "Saxenda", "label": "Saxenda", "shape": "dot", "size": 10}, {"id": "Lorcaserin", "label": "Lorcaserin", "shape": "dot", "size": 10}, {"id": "Bontril Slow Release", "label": "Bontril Slow Release", "shape": "dot", "size": 10}, {"id": "Bupropion / naltrexone", "label": "Bupropion / naltrexone", "shape": "dot", "size": 10}, {"id": "Xenical", "label": "Xenical", "shape": "dot", "size": 10}, {"id": "Orlistat", "label": "Orlistat", "shape": "dot", "size": 10}, {"id": "Victoza", "label": "Victoza", "shape": "dot", "size": 10}, {"id": "Diethylpropion", "label": "Diethylpropion", "shape": "dot", "size": 10}, {"id": "Belviq", "label": "Belviq", "shape": "dot", "size": 10}, {"id": "Insomnia", "label": "Insomnia", "shape": "dot", "size": 10}, {"id": "Amitriptyline", "label": "Amitriptyline", "shape": "dot", "size": 10}, {"id": "Mirtazapine", "label": "Mirtazapine", "shape": "dot", "size": 10}, {"id": "Zolpidem", "label": "Zolpidem", "shape": "dot", "size": 10}, {"id": "Ramelteon", "label": "Ramelteon", "shape": "dot", "size": 10}, {"id": "Suvorexant", "label": "Suvorexant", "shape": "dot", "size": 10}, {"id": "Ambien", "label": "Ambien", "shape": "dot", "size": 10}, {"id": "Diphenhydramine", "label": "Diphenhydramine", "shape": "dot", "size": 10}, {"id": "Rozerem", "label": "Rozerem", "shape": "dot", "size": 10}, {"id": "Restoril", "label": "Restoril", "shape": "dot", "size": 10}, {"id": "Lorazepam", "label": "Lorazepam", "shape": "dot", "size": 10}, {"id": "Clonazepam", "label": "Clonazepam", "shape": "dot", "size": 10}, {"id": "Secobarbital", "label": "Secobarbital", "shape": "dot", "size": 10}, {"id": "Tryptophan", "label": "Tryptophan", "shape": "dot", "size": 10}, {"id": "Lunesta", "label": "Lunesta", "shape": "dot", "size": 10}, {"id": "Temazepam", "label": "Temazepam", "shape": "dot", "size": 10}, {"id": "Chloral hydrate", "label": "Chloral hydrate", "shape": "dot", "size": 10}, {"id": "Melatonin", "label": "Melatonin", "shape": "dot", "size": 10}, {"id": "Belsomra", "label": "Belsomra", "shape": "dot", "size": 10}, {"id": "Elavil", "label": "Elavil", "shape": "dot", "size": 10}, {"id": "Unisom SleepGels", "label": "Unisom SleepGels", "shape": "dot", "size": 10}, {"id": "Gabapentin", "label": "Gabapentin", "shape": "dot", "size": 10}, {"id": "Pain", "label": "Pain", "shape": "dot", "size": 10}, {"id": "Toradol", "label": "Toradol", "shape": "dot", "size": 10}, {"id": "Morphine", "label": "Morphine", "shape": "dot", "size": 10}, {"id": "Buprenorphine", "label": "Buprenorphine", "shape": "dot", "size": 10}, {"id": "Acetaminophen / hydrocodone", "label": "Acetaminophen / hydrocodone", "shape": "dot", "size": 10}, {"id": "Camphor / menthol", "label": "Camphor / menthol", "shape": "dot", "size": 10}, {"id": "Opana ER", "label": "Opana ER", "shape": "dot", "size": 10}, {"id": "Voltaren-XR", "label": "Voltaren-XR", "shape": "dot", "size": 10}, {"id": "Celecoxib", "label": "Celecoxib", "shape": "dot", "size": 10}, {"id": "Fentanyl", "label": "Fentanyl", "shape": "dot", "size": 10}, {"id": "Oxymorphone", "label": "Oxymorphone", "shape": "dot", "size": 10}, {"id": "Norco", "label": "Norco", "shape": "dot", "size": 10}, {"id": "Nucynta", "label": "Nucynta", "shape": "dot", "size": 10}, {"id": "Hysingla ER", "label": "Hysingla ER", "shape": "dot", "size": 10}, {"id": "Oxycodone", "label": "Oxycodone", "shape": "dot", "size": 10}, {"id": "Diclofenac", "label": "Diclofenac", "shape": "dot", "size": 10}, {"id": "Ibuprofen", "label": "Ibuprofen", "shape": "dot", "size": 10}, {"id": "Acetaminophen / oxycodone", "label": "Acetaminophen / oxycodone", "shape": "dot", "size": 10}, {"id": "Lortab", "label": "Lortab", "shape": "dot", "size": 10}, {"id": "Tapentadol", "label": "Tapentadol", "shape": "dot", "size": 10}, {"id": "Ketorolac", "label": "Ketorolac", "shape": "dot", "size": 10}, {"id": "Opana", "label": "Opana", "shape": "dot", "size": 10}, {"id": "Percocet", "label": "Percocet", "shape": "dot", "size": 10}, {"id": "Tramadol", "label": "Tramadol", "shape": "dot", "size": 10}, {"id": "Ultram ER", "label": "Ultram ER", "shape": "dot", "size": 10}, {"id": "Methadone", "label": "Methadone", "shape": "dot", "size": 10}, {"id": "Butorphanol", "label": "Butorphanol", "shape": "dot", "size": 10}, {"id": "Hydrocodone", "label": "Hydrocodone", "shape": "dot", "size": 10}, {"id": "Vicodin", "label": "Vicodin", "shape": "dot", "size": 10}, {"id": "Voltaren", "label": "Voltaren", "shape": "dot", "size": 10}, {"id": "Neurontin", "label": "Neurontin", "shape": "dot", "size": 10}, {"id": "Pregabalin", "label": "Pregabalin", "shape": "dot", "size": 10}, {"id": "Dilaudid", "label": "Dilaudid", "shape": "dot", "size": 10}, {"id": "Vicodin ES", "label": "Vicodin ES", "shape": "dot", "size": 10}, {"id": "Hydromorphone", "label": "Hydromorphone", "shape": "dot", "size": 10}, {"id": "Trolamine salicylate", "label": "Trolamine salicylate", "shape": "dot", "size": 10}, {"id": "Roxicodone Intensol", "label": "Roxicodone Intensol", "shape": "dot", "size": 10}, {"id": "Aspirin / caffeine", "label": "Aspirin / caffeine", "shape": "dot", "size": 10}, {"id": "Meperidine", "label": "Meperidine", "shape": "dot", "size": 10}, {"id": "Pentazocine", "label": "Pentazocine", "shape": "dot", "size": 10}, {"id": "Endocet", "label": "Endocet", "shape": "dot", "size": 10}, {"id": "Naproxen", "label": "Naproxen", "shape": "dot", "size": 10}, {"id": "Fentora", "label": "Fentora", "shape": "dot", "size": 10}, {"id": "Kadian", "label": "Kadian", "shape": "dot", "size": 10}, {"id": "Anxiety", "label": "Anxiety", "shape": "dot", "size": 10}, {"id": "Buspirone", "label": "Buspirone", "shape": "dot", "size": 10}, {"id": "Propranolol", "label": "Propranolol", "shape": "dot", "size": 10}, {"id": "Alprazolam", "label": "Alprazolam", "shape": "dot", "size": 10}, {"id": "BuSpar", "label": "BuSpar", "shape": "dot", "size": 10}, {"id": "Hydroxyzine", "label": "Hydroxyzine", "shape": "dot", "size": 10}, {"id": "Diazepam", "label": "Diazepam", "shape": "dot", "size": 10}, {"id": "Atarax", "label": "Atarax", "shape": "dot", "size": 10}, {"id": "Compazine", "label": "Compazine", "shape": "dot", "size": 10}, {"id": "Valium", "label": "Valium", "shape": "dot", "size": 10}, {"id": "Oxazepam", "label": "Oxazepam", "shape": "dot", "size": 10}, {"id": "Risperidone", "label": "Risperidone", "shape": "dot", "size": 10}, {"id": "Acne", "label": "Acne", "shape": "dot", "size": 10}, {"id": "Tretinoin", "label": "Tretinoin", "shape": "dot", "size": 10}, {"id": "Spironolactone", "label": "Spironolactone", "shape": "dot", "size": 10}, {"id": "Adapalene / benzoyl peroxide", "label": "Adapalene / benzoyl peroxide", "shape": "dot", "size": 10}, {"id": "Isotretinoin", "label": "Isotretinoin", "shape": "dot", "size": 10}, {"id": "Aczone", "label": "Aczone", "shape": "dot", "size": 10}, {"id": "Epiduo", "label": "Epiduo", "shape": "dot", "size": 10}, {"id": "Accutane", "label": "Accutane", "shape": "dot", "size": 10}, {"id": "Solodyn", "label": "Solodyn", "shape": "dot", "size": 10}, {"id": "Ziana", "label": "Ziana", "shape": "dot", "size": 10}, {"id": "Doxycycline", "label": "Doxycycline", "shape": "dot", "size": 10}, {"id": "Tri-Sprintec", "label": "Tri-Sprintec", "shape": "dot", "size": 10}, {"id": "Benzoyl peroxide / clindamycin", "label": "Benzoyl peroxide / clindamycin", "shape": "dot", "size": 10}, {"id": "Clindamycin / tretinoin", "label": "Clindamycin / tretinoin", "shape": "dot", "size": 10}, {"id": "Differin", "label": "Differin", "shape": "dot", "size": 10}, {"id": "Minocycline", "label": "Minocycline", "shape": "dot", "size": 10}, {"id": "Atralin", "label": "Atralin", "shape": "dot", "size": 10}, {"id": "Sulfamethoxazole / trimethoprim", "label": "Sulfamethoxazole / trimethoprim", "shape": "dot", "size": 10}, {"id": "Clindamycin", "label": "Clindamycin", "shape": "dot", "size": 10}, {"id": "Duac", "label": "Duac", "shape": "dot", "size": 10}, {"id": "Dapsone", "label": "Dapsone", "shape": "dot", "size": 10}, {"id": "Doryx", "label": "Doryx", "shape": "dot", "size": 10}, {"id": "Adapalene", "label": "Adapalene", "shape": "dot", "size": 10}]);
+        edges = new vis.DataSet([{"from": "ADHD", "to": "Guanfacine", "weight": 1}, {"from": "ADHD", "to": "Daytrana", "weight": 1}, {"from": "ADHD", "to": "Intuniv", "weight": 1}, {"from": "ADHD", "to": "Focalin", "weight": 1}, {"from": "ADHD", "to": "Vyvanse", "weight": 1}, {"from": "ADHD", "to": "Lisdexamfetamine", "weight": 1}, {"from": "ADHD", "to": "Amphetamine / dextroamphetamine", "weight": 1}, {"from": "ADHD", "to": "Atomoxetine", "weight": 1}, {"from": "ADHD", "to": "Concerta", "weight": 1}, {"from": "ADHD", "to": "Strattera", "weight": 1}, {"from": "ADHD", "to": "Focalin XR", "weight": 1}, {"from": "ADHD", "to": "Methylphenidate", "weight": 1}, {"from": "ADHD", "to": "Ritalin", "weight": 1}, {"from": "ADHD", "to": "Kapvay", "weight": 1}, {"from": "ADHD", "to": "Adderall", "weight": 1}, {"from": "ADHD", "to": "Bupropion", "weight": 1}, {"from": "ADHD", "to": "Dexmethylphenidate", "weight": 1}, {"from": "ADHD", "to": "Wellbutrin SR", "weight": 1}, {"from": "ADHD", "to": "Zenzedi", "weight": 1}, {"from": "ADHD", "to": "Desoxyn", "weight": 1}, {"from": "Birth Control", "to": "Lybrel", "weight": 1}, {"from": "Birth Control", "to": "Ortho Evra", "weight": 1}, {"from": "Birth Control", "to": "Ethinyl estradiol / levonorgestrel", "weight": 1}, {"from": "Birth Control", "to": "Nexplanon", "weight": 1}, {"from": "Birth Control", "to": "Etonogestrel", "weight": 1}, {"from": "Birth Control", "to": "Implanon", "weight": 1}, {"from": "Birth Control", "to": "Drospirenone / ethinyl estradiol", "weight": 1}, {"from": "Birth Control", "to": "NuvaRing", "weight": 1}, {"from": "Birth Control", "to": "Gildess Fe 1 / 20", "weight": 1}, {"from": "Birth Control", "to": "Lo Loestrin Fe", "weight": 1}, {"from": "Birth Control", "to": "Levonorgestrel", "weight": 1}, {"from": "Birth Control", "to": "Sronyx", "weight": 1}, {"from": "Birth Control", "to": "Jolivette", "weight": 1}, {"from": "Birth Control", "to": "Aviane", "weight": 1}, {"from": "Birth Control", "to": "Depo-Provera", "weight": 1}, {"from": "Birth Control", "to": "Ethinyl estradiol / norgestimate", "weight": 1}, {"from": "Birth Control", "to": "Mirena", "weight": 1}, {"from": "Birth Control", "to": "Ethinyl estradiol / norelgestromin", "weight": 1}, {"from": "Birth Control", "to": "Reclipsen", "weight": 1}, {"from": "Birth Control", "to": "Skyla", "weight": 1}, {"from": "Birth Control", "to": "Ortho Tri-Cyclen", "weight": 1}, {"from": "Birth Control", "to": "Ethinyl estradiol / norethindrone", "weight": 1}, {"from": "Birth Control", "to": "Seasonique", "weight": 1}, {"from": "Birth Control", "to": "Liletta", "weight": 1}, {"from": "Birth Control", "to": "Medroxyprogesterone", "weight": 1}, {"from": "Birth Control", "to": "Levora", "weight": 1}, {"from": "Birth Control", "to": "ParaGard", "weight": 1}, {"from": "Birth Control", "to": "Ocella", "weight": 1}, {"from": "Birth Control", "to": "Copper", "weight": 1}, {"from": "Birth Control", "to": "Microgestin Fe 1 / 20", "weight": 1}, {"from": "Birth Control", "to": "Blisovi Fe 1 / 20", "weight": 1}, {"from": "Birth Control", "to": "Loestrin 24 Fe", "weight": 1}, {"from": "Birth Control", "to": "Junel Fe 1 / 20", "weight": 1}, {"from": "Birth Control", "to": "Sprintec", "weight": 1}, {"from": "Birth Control", "to": "Ortho Tri-Cyclen Lo", "weight": 1}, {"from": "Birth Control", "to": "Orsythia", "weight": 1}, {"from": "Birth Control", "to": "Ethinyl estradiol / etonogestrel", "weight": 1}, {"from": "Birth Control", "to": "Depo-Provera Contraceptive", "weight": 1}, {"from": "Birth Control", "to": "TriNessa", "weight": 1}, {"from": "Birth Control", "to": "Yaz", "weight": 1}, {"from": "Birth Control", "to": "Norethindrone", "weight": 1}, {"from": "Birth Control", "to": "Minastrin 24 Fe", "weight": 1}, {"from": "Birth Control", "to": "Mononessa", "weight": 1}, {"from": "Birth Control", "to": "Jolessa", "weight": 1}, {"from": "Birth Control", "to": "Cryselle", "weight": 1}, {"from": "Birth Control", "to": "Sharobel", "weight": 1}, {"from": "Birth Control", "to": "Apri", "weight": 1}, {"from": "Birth Control", "to": "Velivet", "weight": 1}, {"from": "Birth Control", "to": "Necon 1 / 35", "weight": 1}, {"from": "Birth Control", "to": "Nora-Be", "weight": 1}, {"from": "Birth Control", "to": "Kyleena", "weight": 1}, {"from": "Birth Control", "to": "Camrese", "weight": 1}, {"from": "Birth Control", "to": "Junel Fe 1.5 / 30", "weight": 1}, {"from": "Birth Control", "to": "Desogestrel / ethinyl estradiol", "weight": 1}, {"from": "Birth Control", "to": "Beyaz", "weight": 1}, {"from": "Birth Control", "to": "Errin", "weight": 1}, {"from": "Birth Control", "to": "Estarylla", "weight": 1}, {"from": "Birth Control", "to": "Ethinyl estradiol / norgestrel", "weight": 1}, {"from": "Birth Control", "to": "Lutera", "weight": 1}, {"from": "Birth Control", "to": "LoSeasonique", "weight": 1}, {"from": "Birth Control", "to": "Ortho Cyclen", "weight": 1}, {"from": "Birth Control", "to": "Xulane", "weight": 1}, {"from": "Birth Control", "to": "Alesse", "weight": 1}, {"from": "Birth Control", "to": "Tri-Lo-Sprintec", "weight": 1}, {"from": "Emergency Contraception", "to": "Levonorgestrel", "weight": 1}, {"from": "Emergency Contraception", "to": "Plan B One-Step", "weight": 1}, {"from": "Emergency Contraception", "to": "Ulipristal", "weight": 1}, {"from": "Emergency Contraception", "to": "Plan B", "weight": 1}, {"from": "Emergency Contraception", "to": "EContra EZ", "weight": 1}, {"from": "Emergency Contraception", "to": "ella", "weight": 1}, {"from": "Emergency Contraception", "to": "My Way", "weight": 1}, {"from": "Bipolar Disorde", "to": "Aripiprazole", "weight": 1}, {"from": "Bipolar Disorde", "to": "Lamotrigine", "weight": 1}, {"from": "Bipolar Disorde", "to": "Symbyax", "weight": 1}, {"from": "Bipolar Disorde", "to": "Latuda", "weight": 1}, {"from": "Bipolar Disorde", "to": "Lithium", "weight": 1}, {"from": "Bipolar Disorde", "to": "Lamictal", "weight": 1}, {"from": "Bipolar Disorde", "to": "Olanzapine", "weight": 1}, {"from": "Bipolar Disorde", "to": "Lurasidone", "weight": 1}, {"from": "Bipolar Disorde", "to": "Depakote", "weight": 1}, {"from": "Bipolar Disorde", "to": "Ziprasidone", "weight": 1}, {"from": "Bipolar Disorde", "to": "Saphris", "weight": 1}, {"from": "Bipolar Disorde", "to": "Quetiapine", "weight": 1}, {"from": "Bipolar Disorde", "to": "Seroquel", "weight": 1}, {"from": "Bipolar Disorde", "to": "Sertraline", "weight": 1}, {"from": "Bipolar Disorde", "to": "Klonopin", "weight": 1}, {"from": "Bipolar Disorde", "to": "Carbamazepine", "weight": 1}, {"from": "Bipolar Disorde", "to": "Zyprexa", "weight": 1}, {"from": "Bipolar Disorde", "to": "Seroquel XR", "weight": 1}, {"from": "Bipolar Disorde", "to": "Wellbutrin", "weight": 1}, {"from": "Bipolar Disorde", "to": "Divalproex sodium", "weight": 1}, {"from": "Bipolar Disorde", "to": "Effexor", "weight": 1}, {"from": "Bipolar Disorde", "to": "Geodon", "weight": 1}, {"from": "Bipolar Disorde", "to": "Invega", "weight": 1}, {"from": "Aripiprazole", "to": "Depression", "weight": 1}, {"from": "Depression", "to": "L-methylfolate", "weight": 1}, {"from": "Depression", "to": "Sertraline", "weight": 1}, {"from": "Depression", "to": "Venlafaxine", "weight": 1}, {"from": "Depression", "to": "Effexor XR", "weight": 1}, {"from": "Depression", "to": "Wellbutrin", "weight": 1}, {"from": "Depression", "to": "Desvenlafaxine", "weight": 1}, {"from": "Depression", "to": "Fluoxetine", "weight": 1}, {"from": "Depression", "to": "Bupropion", "weight": 1}, {"from": "Depression", "to": "Trintellix", "weight": 1}, {"from": "Depression", "to": "Trazodone", "weight": 1}, {"from": "Depression", "to": "Pristiq", "weight": 1}, {"from": "Depression", "to": "Levomilnacipran", "weight": 1}, {"from": "Depression", "to": "Cymbalta", "weight": 1}, {"from": "Depression", "to": "Escitalopram", "weight": 1}, {"from": "Depression", "to": "Nardil", "weight": 1}, {"from": "Depression", "to": "Zoloft", "weight": 1}, {"from": "Depression", "to": "Methylphenidate", "weight": 1}, {"from": "Depression", "to": "Wellbutrin XL", "weight": 1}, {"from": "Depression", "to": "Lexapro", "weight": 1}, {"from": "Depression", "to": "Viibryd", "weight": 1}, {"from": "Depression", "to": "Effexor", "weight": 1}, {"from": "Depression", "to": "Zyprexa", "weight": 1}, {"from": "Depression", "to": "Duloxetine", "weight": 1}, {"from": "Depression", "to": "Rexulti", "weight": 1}, {"from": "Depression", "to": "Quetiapine", "weight": 1}, {"from": "Depression", "to": "Citalopram", "weight": 1}, {"from": "Depression", "to": "St. john\u0027s wort", "weight": 1}, {"from": "Depression", "to": "Vilazodone", "weight": 1}, {"from": "Depression", "to": "Emsam", "weight": 1}, {"from": "Depression", "to": "Celexa", "weight": 1}, {"from": "Depression", "to": "Vortioxetine", "weight": 1}, {"from": "Depression", "to": "Paxil", "weight": 1}, {"from": "Depression", "to": "Prozac", "weight": 1}, {"from": "Depression", "to": "Lamotrigine", "weight": 1}, {"from": "Depression", "to": "Isocarboxazid", "weight": 1}, {"from": "Depression", "to": "Limbitrol", "weight": 1}, {"from": "Depression", "to": "Paroxetine", "weight": 1}, {"from": "Depression", "to": "Deplin", "weight": 1}, {"from": "Depression", "to": "Serzone", "weight": 1}, {"from": "Depression", "to": "Xanax", "weight": 1}, {"from": "Obesity", "to": "Liraglutide", "weight": 1}, {"from": "Obesity", "to": "Contrave", "weight": 1}, {"from": "Obesity", "to": "Phentermine / topiramate", "weight": 1}, {"from": "Obesity", "to": "Saxenda", "weight": 1}, {"from": "Obesity", "to": "Lorcaserin", "weight": 1}, {"from": "Obesity", "to": "Bontril Slow Release", "weight": 1}, {"from": "Obesity", "to": "Bupropion / naltrexone", "weight": 1}, {"from": "Obesity", "to": "Xenical", "weight": 1}, {"from": "Obesity", "to": "Orlistat", "weight": 1}, {"from": "Obesity", "to": "Victoza", "weight": 1}, {"from": "Obesity", "to": "Diethylpropion", "weight": 1}, {"from": "Obesity", "to": "Pristiq", "weight": 1}, {"from": "Obesity", "to": "Belviq", "weight": 1}, {"from": "Insomnia", "to": "Trazodone", "weight": 1}, {"from": "Insomnia", "to": "Amitriptyline", "weight": 1}, {"from": "Insomnia", "to": "Mirtazapine", "weight": 1}, {"from": "Insomnia", "to": "Zolpidem", "weight": 1}, {"from": "Insomnia", "to": "Quetiapine", "weight": 1}, {"from": "Insomnia", "to": "Ramelteon", "weight": 1}, {"from": "Insomnia", "to": "Suvorexant", "weight": 1}, {"from": "Insomnia", "to": "Ambien", "weight": 1}, {"from": "Insomnia", "to": "Diphenhydramine", "weight": 1}, {"from": "Insomnia", "to": "Rozerem", "weight": 1}, {"from": "Insomnia", "to": "Restoril", "weight": 1}, {"from": "Insomnia", "to": "Lorazepam", "weight": 1}, {"from": "Insomnia", "to": "Clonazepam", "weight": 1}, {"from": "Insomnia", "to": "Secobarbital", "weight": 1}, {"from": "Insomnia", "to": "Tryptophan", "weight": 1}, {"from": "Insomnia", "to": "Lunesta", "weight": 1}, {"from": "Insomnia", "to": "Temazepam", "weight": 1}, {"from": "Insomnia", "to": "Chloral hydrate", "weight": 1}, {"from": "Insomnia", "to": "Melatonin", "weight": 1}, {"from": "Insomnia", "to": "Belsomra", "weight": 1}, {"from": "Insomnia", "to": "Elavil", "weight": 1}, {"from": "Insomnia", "to": "Unisom SleepGels", "weight": 1}, {"from": "Insomnia", "to": "Gabapentin", "weight": 1}, {"from": "Pain", "to": "Toradol", "weight": 1}, {"from": "Pain", "to": "Morphine", "weight": 1}, {"from": "Pain", "to": "Buprenorphine", "weight": 1}, {"from": "Pain", "to": "Acetaminophen / hydrocodone", "weight": 1}, {"from": "Pain", "to": "Camphor / menthol", "weight": 1}, {"from": "Pain", "to": "Opana ER", "weight": 1}, {"from": "Pain", "to": "Gabapentin", "weight": 1}, {"from": "Pain", "to": "Voltaren-XR", "weight": 1}, {"from": "Pain", "to": "Celecoxib", "weight": 1}, {"from": "Pain", "to": "Fentanyl", "weight": 1}, {"from": "Pain", "to": "Oxymorphone", "weight": 1}, {"from": "Pain", "to": "Norco", "weight": 1}, {"from": "Pain", "to": "Nucynta", "weight": 1}, {"from": "Pain", "to": "Hysingla ER", "weight": 1}, {"from": "Pain", "to": "Oxycodone", "weight": 1}, {"from": "Pain", "to": "Diclofenac", "weight": 1}, {"from": "Pain", "to": "Ibuprofen", "weight": 1}, {"from": "Pain", "to": "Acetaminophen / oxycodone", "weight": 1}, {"from": "Pain", "to": "Lortab", "weight": 1}, {"from": "Pain", "to": "Tapentadol", "weight": 1}, {"from": "Pain", "to": "Ketorolac", "weight": 1}, {"from": "Pain", "to": "Opana", "weight": 1}, {"from": "Pain", "to": "Percocet", "weight": 1}, {"from": "Pain", "to": "Tramadol", "weight": 1}, {"from": "Pain", "to": "Ultram ER", "weight": 1}, {"from": "Pain", "to": "Cymbalta", "weight": 1}, {"from": "Pain", "to": "Methadone", "weight": 1}, {"from": "Pain", "to": "Butorphanol", "weight": 1}, {"from": "Pain", "to": "Hydrocodone", "weight": 1}, {"from": "Pain", "to": "Vicodin", "weight": 1}, {"from": "Pain", "to": "Duloxetine", "weight": 1}, {"from": "Pain", "to": "Voltaren", "weight": 1}, {"from": "Pain", "to": "Neurontin", "weight": 1}, {"from": "Pain", "to": "Pregabalin", "weight": 1}, {"from": "Pain", "to": "Dilaudid", "weight": 1}, {"from": "Pain", "to": "Vicodin ES", "weight": 1}, {"from": "Pain", "to": "Hydromorphone", "weight": 1}, {"from": "Pain", "to": "Trolamine salicylate", "weight": 1}, {"from": "Pain", "to": "Roxicodone Intensol", "weight": 1}, {"from": "Pain", "to": "Amitriptyline", "weight": 1}, {"from": "Pain", "to": "Aspirin / caffeine", "weight": 1}, {"from": "Pain", "to": "Meperidine", "weight": 1}, {"from": "Pain", "to": "Pentazocine", "weight": 1}, {"from": "Pain", "to": "Endocet", "weight": 1}, {"from": "Pain", "to": "Naproxen", "weight": 1}, {"from": "Pain", "to": "Fentora", "weight": 1}, {"from": "Pain", "to": "Kadian", "weight": 1}, {"from": "Venlafaxine", "to": "Anxiety", "weight": 1}, {"from": "Anxiety", "to": "Effexor XR", "weight": 1}, {"from": "Anxiety", "to": "Mirtazapine", "weight": 1}, {"from": "Anxiety", "to": "Buspirone", "weight": 1}, {"from": "Anxiety", "to": "Propranolol", "weight": 1}, {"from": "Anxiety", "to": "Alprazolam", "weight": 1}, {"from": "Anxiety", "to": "BuSpar", "weight": 1}, {"from": "Anxiety", "to": "Escitalopram", "weight": 1}, {"from": "Anxiety", "to": "Duloxetine", "weight": 1}, {"from": "Anxiety", "to": "Lexapro", "weight": 1}, {"from": "Anxiety", "to": "Clonazepam", "weight": 1}, {"from": "Anxiety", "to": "Hydroxyzine", "weight": 1}, {"from": "Anxiety", "to": "Diazepam", "weight": 1}, {"from": "Anxiety", "to": "Gabapentin", "weight": 1}, {"from": "Anxiety", "to": "Atarax", "weight": 1}, {"from": "Anxiety", "to": "Cymbalta", "weight": 1}, {"from": "Anxiety", "to": "Compazine", "weight": 1}, {"from": "Anxiety", "to": "Lorazepam", "weight": 1}, {"from": "Anxiety", "to": "Valium", "weight": 1}, {"from": "Anxiety", "to": "Vilazodone", "weight": 1}, {"from": "Anxiety", "to": "Pristiq", "weight": 1}, {"from": "Anxiety", "to": "Klonopin", "weight": 1}, {"from": "Anxiety", "to": "Oxazepam", "weight": 1}, {"from": "Anxiety", "to": "Risperidone", "weight": 1}, {"from": "Drospirenone / ethinyl estradiol", "to": "Acne", "weight": 1}, {"from": "Acne", "to": "Tretinoin", "weight": 1}, {"from": "Acne", "to": "Ethinyl estradiol / norgestimate", "weight": 1}, {"from": "Acne", "to": "Spironolactone", "weight": 1}, {"from": "Acne", "to": "Adapalene / benzoyl peroxide", "weight": 1}, {"from": "Acne", "to": "Isotretinoin", "weight": 1}, {"from": "Acne", "to": "Aczone", "weight": 1}, {"from": "Acne", "to": "Epiduo", "weight": 1}, {"from": "Acne", "to": "Accutane", "weight": 1}, {"from": "Acne", "to": "Solodyn", "weight": 1}, {"from": "Acne", "to": "Ziana", "weight": 1}, {"from": "Acne", "to": "Doxycycline", "weight": 1}, {"from": "Acne", "to": "TriNessa", "weight": 1}, {"from": "Acne", "to": "Tri-Sprintec", "weight": 1}, {"from": "Acne", "to": "Benzoyl peroxide / clindamycin", "weight": 1}, {"from": "Acne", "to": "Clindamycin / tretinoin", "weight": 1}, {"from": "Acne", "to": "Differin", "weight": 1}, {"from": "Acne", "to": "Minocycline", "weight": 1}, {"from": "Acne", "to": "Atralin", "weight": 1}, {"from": "Acne", "to": "Sulfamethoxazole / trimethoprim", "weight": 1}, {"from": "Acne", "to": "Clindamycin", "weight": 1}, {"from": "Acne", "to": "Duac", "weight": 1}, {"from": "Acne", "to": "Dapsone", "weight": 1}, {"from": "Acne", "to": "Yaz", "weight": 1}, {"from": "Acne", "to": "Doryx", "weight": 1}, {"from": "Acne", "to": "Loestrin 24 Fe", "weight": 1}, {"from": "Acne", "to": "Microgestin Fe 1 / 20", "weight": 1}, {"from": "Acne", "to": "Adapalene", "weight": 1}, {"from": "Acne", "to": "Estarylla", "weight": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -80000,
+            "springConstant": 0.001,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+        network.on("stabilizationProgress", function(params) {
+      		document.getElementById('loadingBar').removeAttribute("style");
+	        var maxWidth = 496;
+	        var minWidth = 20;
+	        var widthFactor = params.iterations/params.total;
+	        var width = Math.max(minWidth,maxWidth * widthFactor);
+
+	        document.getElementById('bar').style.width = width + 'px';
+	        document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+	    });
+	    network.once("stabilizationIterationsDone", function() {
+	        document.getElementById('text').innerHTML = '100%';
+	        document.getElementById('bar').style.width = '496px';
+	        document.getElementById('loadingBar').style.opacity = 0;
+	        // really clean the dom element
+	        setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+	    });
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
